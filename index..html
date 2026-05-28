@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Breach</title>
+
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#050505;
+color:#00FF9C;
+font-family:'JetBrains Mono', monospace;
+overflow:hidden;
+height:100vh;
+}
+
+#matrix{
+position:fixed;
+width:100%;
+height:100%;
+top:0;
+left:0;
+z-index:-1;
+opacity:0.15;
+}
+
+.screen{
+display:none;
+width:100%;
+height:100vh;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
+}
+
+.active{
+display:flex;
+}
+
+.title{
+font-size:2rem;
+margin-bottom:20px;
+text-shadow:0 0 10px #00FF9C;
+}
+
+.sub{
+margin-top:10px;
+}
+
+.progress-container{
+width:320px;
+height:30px;
+border:2px solid #00FF9C;
+margin-top:20px;
+}
+
+.progress-bar{
+height:100%;
+width:0%;
+background:#00FF9C;
+box-shadow:0 0 20px #00FF9C;
+}
+
+.warning{
+color:#ff004c;
+text-shadow:0 0 10px #ff004c;
+}
+
+.log-box{
+background:#111;
+border:1px solid #00FF9C;
+padding:20px;
+width:90%;
+max-width:700px;
+text-align:left;
+min-height:250px;
+overflow:auto;
+}
+
+.binary{
+max-width:700px;
+word-break:break-all;
+color:#00E5FF;
+}
+
+.buttons{
+position:relative;
+width:300px;
+height:150px;
+margin-top:40px;
+}
+
+button{
+padding:15px 30px;
+background:#111;
+color:#00FF9C;
+border:2px solid #00FF9C;
+font-family:'JetBrains Mono', monospace;
+cursor:pointer;
+position:absolute;
+}
+
+button:hover{
+background:#00FF9C;
+color:black;
+}
+
+#yesBtn{
+left:20px;
+top:50px;
+}
+
+#noBtn{
+right:20px;
+top:50px;
+}
+
+.terminal{
+position:fixed;
+bottom:20px;
+left:20px;
+width:400px;
+background:#111;
+border:1px solid #00FF9C;
+padding:15px;
+}
+
+.terminal input{
+width:100%;
+margin-top:10px;
+background:black;
+color:#00FF9C;
+border:none;
+outline:none;
+font-family:'JetBrains Mono', monospace;
+}
+
+#tiny{
+position:fixed;
+right:20px;
+bottom:10px;
+color:#666;
+font-size:0.8rem;
+}
+
+@media(max-width:768px){
+
+.title{
+font-size:1.3rem;
+}
+
+.terminal{
+width:90%;
+left:5%;
+}
+
+.progress-container{
+width:90%;
+}
+
+}
+
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<audio id="bgMusic" loop>
+<source src="music.mp3" type="audio/mp3">
+</audio>
+
+<!-- SCREEN 1 -->
+<div class="screen active" id="screen1">
+
+<div class="title">
+INITIALIZING SYSTEM...
+</div>
+
+<div class="sub">LOADING HEART_DATABASE.sys</div>
+<div class="sub">PLEASE WAIT...</div>
+
+<div class="progress-container">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="sub" id="progressText">0%</div>
+
+</div>
+
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+
+<div class="title warning">
+WARNING<br>
+UNAUTHORIZED ACCESS DETECTED
+</div>
+
+<div class="sub">
+Someone has bypassed the emotional firewall.
+</div>
+
+</div>
+
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+
+<div class="title">SCANNING USER DATA...</div>
+
+<div class="log-box">
+<p>Name: My future soulmate</p>
+<p>Status: suspiciously attractive</p>
+<p>Threat Level: EXTREME</p>
+</div>
+
+</div>
+
+<!-- SCREEN 4 -->
+<div class="screen" id="screen4">
+
+<div class="title">SYSTEM LOGS</div>
+
+<div class="log-box" id="logs"></div>
+
+</div>
+
+<!-- SCREEN 5 -->
+<div class="screen" id="screen5">
+
+<div class="title">Decrypting hidden feelings...</div>
+
+<div class="binary">
+01001001 00100000 01101100 01101001 01101011 01100101 00100000 01111001 01101111 01110101
+</div>
+
+<div class="title" id="decoded" style="display:none;margin-top:40px;">
+I LIKE YOU
+</div>
+
+</div>
+
+<!-- SCREEN 6 -->
+<div class="screen" id="screen6">
+
+<div class="title warning">
+EMOTIONAL FIREWALL FAILED
+</div>
+
+<div class="sub" style="margin-top:30px;font-size:1.4rem;">
+Reason:<br><br>
+I love you just the way you are.
+</div>
+
+</div>
+
+<!-- SCREEN 7 -->
+<div class="screen" id="screen7">
+
+<pre>
+> open confession.txt
+
+I tried to stay focused.
+I tried to act normal.
+
+But somehow...
+You hacked my entire system.
+
+And honestly?
+I don't even want the firewall back anymore.
+</pre>
+
+<div style="margin-top:20px;">
+> Accept connection request?
+</div>
+
+<div class="buttons">
+<button id="yesBtn">[Y] YES</button>
+<button id="noBtn">[N] NO</button>
+</div>
+
+<div id="accepted" style="display:none;margin-top:20px;font-size:1.5rem;">
+Connection established ❤️
+</div>
+
+</div>
+
+<!-- TERMINAL -->
+<div class="terminal">
+
+<div>> terminal.exe</div>
+
+<input type="text" id="commandInput" placeholder="type command...">
+
+<div id="terminalOutput" style="margin-top:10px;"></div>
+
+</div>
+
+<div id="tiny">
+// worth getting hacked for.
+</div>
+
+<script>
+
+// MATRIX EFFECT
+
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = '01HACKLOVE';
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = [];
+
+for(let i=0;i<columns;i++){
+drops[i]=1;
+}
+
+function draw(){
+
+ctx.fillStyle='rgba(0,0,0,0.05)';
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle='#00FF9C';
+ctx.font=fontSize+'px monospace';
+
+for(let i=0;i<drops.length;i++){
+
+const text=letters[Math.floor(Math.random()*letters.length)];
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975){
+drops[i]=0;
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,33);
+
+// SCREEN CONTROL
+
+const screens=[
+'screen1',
+'screen2',
+'screen3',
+'screen4',
+'screen5',
+'screen6',
+'screen7'
+];
+
+function showScreen(id){
+
+screens.forEach(screen=>{
+document.getElementById(screen).classList.remove('active');
+});
+
+document.getElementById(id).classList.add('active');
+
+}
+
+// LOADING
+
+let progress=0;
+
+const bar=document.getElementById('progressBar');
+const text=document.getElementById('progressText');
+
+const load=setInterval(()=>{
+
+progress+=2;
+
+bar.style.width=progress+'%';
+text.innerText=progress+'%';
+
+if(progress>=84){
+
+clearInterval(load);
+
+setTimeout(()=>showScreen('screen2'),1000);
+setTimeout(()=>showScreen('screen3'),5000);
+setTimeout(()=>{
+showScreen('screen4');
+startLogs();
+},9000);
+
+setTimeout(()=>{
+showScreen('screen5');
+
+setTimeout(()=>{
+document.getElementById('decoded').style.display='block';
+},3000);
+
+},16000);
+
+setTimeout(()=>showScreen('screen6'),22000);
+setTimeout(()=>showScreen('screen7'),27000);
+
+}
+
+},100);
+
+// LOGS
+
+const logs=[
+'[LOG 01] Saw target at Telegram.',
+'[LOG 02] Heartbeat increased.',
+'[LOG 03] Brain stopped functioning.',
+'[LOG 04] Unable to focus on studies.',
+'',
+'ERROR:',
+'Target now occupies 99% memory.'
+];
+
+function startLogs(){
+
+const box=document.getElementById('logs');
+
+logs.forEach((log,index)=>{
+
+setTimeout(()=>{
+
+const div=document.createElement('div');
+div.innerText=log;
+box.appendChild(div);
+
+},index*1500);
+
+});
+
+}
+
+// NO BUTTON ESCAPE
+
+const noBtn=document.getElementById('noBtn');
+
+noBtn.addEventListener('mouseover',()=>{
+
+const x=Math.random()*220;
+const y=Math.random()*100;
+
+noBtn.style.left=x+'px';
+noBtn.style.top=y+'px';
+
+});
+
+// YES BUTTON
+
+document.getElementById('yesBtn').addEventListener('click',()=>{
+
+document.getElementById('accepted').style.display='block';
+
+});
+
+// TERMINAL COMMANDS
+
+const input=document.getElementById('commandInput');
+const output=document.getElementById('terminalOutput');
+
+input.addEventListener('keydown',(e)=>{
+
+if(e.key==='Enter'){
+
+const command=input.value.trim();
+
+if(command==='help'){
+
+output.innerHTML=`
+Available commands:<br>
+- reveal_feelings<br>
+- access_heart<br>
+- play_music<br>
+- date_request
+`;
+
+}
+
+else if(command==='reveal_feelings'){
+output.innerHTML='Feelings detected: VERY REAL';
+}
+
+else if(command==='access_heart'){
+output.innerHTML='Accessing heart database... ❤️';
+}
+
+else if(command==='play_music'){
+
+const music=document.getElementById('bgMusic');
+
+music.volume=0.7;
+
+music.play().then(()=>{
+output.innerHTML='Playing cyberpunk soundtrack...';
+}).catch(()=>{
+output.innerHTML='Music blocked by browser.';
+});
+
+}
+
+else if(command==='date_request'){
+output.innerHTML='Awaiting target response...';
+}
+
+else if(command==='sudo date_me'){
+output.innerHTML='Permission granted.';
+}
+
+else if(command==='whoami'){
+output.innerHTML='Future boyfriend detected.';
+}
+
+else if(command==='decrypt_heart'){
+output.innerHTML='Decryption successful: I like you.';
+}
+
+else{
+output.innerHTML='Unknown command.';
+}
+
+input.value='';
+
+}
+
+});
+
+window.addEventListener('resize',()=>{
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+});
+
+</script>
+
+</body>
+</html>
